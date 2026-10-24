@@ -1,0 +1,43 @@
+/* ==========================================================================
+   Ivory with Muted Teal
+   ========================================================================== */
+
+/* Main colours */
+
+$background-color: #f5f1e8;
+$body-color: #faf8f2;
+$text-color: #1d1b19;
+
+$link-color: #28645e;
+$link-hover-color: #1e4b47;
+
+$masthead-link-color: $text-color;
+$masthead-link-color-hover: $link-color;
+
+/* Supporting colours */
+
+$border-color: #d8d1c4;
+
+$footer-background-color: $link-color;
+$footer-text-color: #faf8f2;
+$footer-link-color: #faf8f2;
+
+$muted-text-color: #6b645c;
+
+$code-background-color: #eee8dc;
+
+$primary-color: $link-color;        // buttons and highlights
+$success-color: #3f6b3f;
+$warning-color: #b06d1d;
+$danger-color: #8d2d2d;
+$info-color: #4b677a;
+
+$code-background-color: #f1ede2;
+$code-background-color-dark: #ebe4d5;
+/* Site-wide typography, defined before the theme defaults. */
+$serif: 'Albura', Georgia, serif;
+$sans-serif: $serif;
+$sans-serif-narrow: $serif;
+$global-font-family: $serif;
+$header-font-family: $serif;
+$caption-font-family: $serif;

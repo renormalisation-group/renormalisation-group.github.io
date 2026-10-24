@@ -1,0 +1,8 @@
+---
+layout: single
+---
+{{ content }}
+{% assign author_posts = site.posts | where_exp: "post", "post.contributors contains page.contributor_id" %}
+{% assign author_name = site.data.authors[page.contributor_id].name %}
+{% assign heading = "Flows by " | append: author_name %}
+{% include journal-index.html heading=heading posts=author_posts limit=author_posts.size %}

@@ -1,0 +1,12 @@
+{% if site.category_archive.path and page.categories[0] %}
+  {% assign categories_sorted = page.categories | sort_natural %}
+  <p class="page__taxonomy">
+    <span class="taxonomy-label">Category:</span>
+    <span itemprop="keywords">
+    {% for category_word in categories_sorted %}
+      {% assign category_slug = category_word | slugify %}
+      <a href="{{ category_slug | append: '/' | prepend: site.category_archive.path | relative_url }}" class="page__taxonomy-item p-category" rel="tag">{{ category_word }}</a>{% unless forloop.last %}<span class="sep">, </span>{% endunless %}
+    {% endfor %}
+    </span>
+  </p>
+{% endif %}

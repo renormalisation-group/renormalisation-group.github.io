@@ -1,0 +1,7 @@
+{% if page.tags[0] %}
+  {% assign tags_sorted = page.tags | sort_natural %}
+  <p class="page__taxonomy">
+    <span class="taxonomy-label">Cited authors:</span>
+    <span itemprop="keywords">{% for tag_word in tags_sorted %}{{ tag_word | escape }}{% unless forloop.last %}, {% endunless %}{% endfor %}</span>
+  </p>
+{% endif %}

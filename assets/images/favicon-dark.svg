@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 1280">
+  <title>Particle on a Ring — Centered Inverted</title>
+  <desc>Mathematically centered inverted ring with particle position preserved relative to the ring.</desc>
+
+  <rect width="1280" height="1280" fill="#000000"/>
+
+  <g transform="translate(14.967159115861 31.549528321829)">
+    <path
+      d="M 688 254
+         A 360 360 0 1 0 953 460"
+      fill="none"
+      stroke="#FFFFFF"
+      stroke-width="43"
+      stroke-linecap="round"
+    />
+    <circle cx="846" cy="322" r="58" fill="#FFFFFF"/>
+  </g>
+</svg>

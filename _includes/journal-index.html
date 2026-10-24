@@ -1,0 +1,11 @@
+{% if include.posts != nil %}{% assign index_posts = include.posts %}{% else %}{% assign index_posts = site.posts %}{% endif %}
+<h1 class="journal-index__heading">{{ include.heading }}</h1>
+<ul class="journal-index__posts">
+{% for post in index_posts limit:include.limit %}
+  <li>
+    <a href="{{ post.url | relative_url }}">{{ post.title | escape }}</a>
+    <time datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: '%-d %B %Y' }}</time>
+  </li>
+{% endfor %}
+</ul>
+{% if index_posts.size == 0 %}<p>No flows have been published yet.</p>{% endif %}

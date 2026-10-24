@@ -1,0 +1,11 @@
+{% assign date_format = page.date_format | default: site.date_format | default: "%-d %B %Y" %}
+{% if page.date %}
+<p class="page__date">
+  <span class="taxonomy-label">Published:</span>
+  <time class="dt-published" datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: date_format }}</time>
+  {% if page.last_modified_at %}
+    <span class="date-separator"> · </span><span class="taxonomy-label">Updated:</span>
+    <time class="dt-updated" datetime="{{ page.last_modified_at | date_to_xmlschema }}">{{ page.last_modified_at | date: date_format }}</time>
+  {% endif %}
+</p>
+{% endif %}

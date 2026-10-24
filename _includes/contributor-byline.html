@@ -1,0 +1,4 @@
+{% assign byline_post = include.document %}
+{% if byline_post.contributors and byline_post.show_byline != false %}
+<p class="contributor-byline">By {% for id in byline_post.contributors %}{% assign contributor = site.data.authors[id] %}<a rel="author" href="{{ contributor.home | relative_url }}">{{ contributor.name | escape }}</a>{% unless forloop.last %}, {% endunless %}{% endfor %}</p>
+{% endif %}

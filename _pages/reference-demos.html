@@ -1,0 +1,54 @@
+---
+layout: single
+title: Reference styles
+permalink: /reference-demos/
+author_profile: false
+classes: reference-demos
+---
+<p class="reference-demo-intro">Three margin-note treatments. These are isolated previews; the article is unchanged.</p>
+
+<section class="reference-demo">
+  <h2><span>01</span> Quiet sidenotes</h2>
+  <p class="reference-demo-description">Full references beside the passage, with a muted number and no divider or box.</p>
+  <div class="reference-demo-sheet">
+    <div class="reference-demo-prose">
+      <p>Engels embodied this zeitgeist, this “enthusiasm of reason” wholly.<sup>6</sup></p>
+      <p>He kept company with a number of scientists and read extensively on advances in the natural sciences and mathematics throughout his life.<sup>8</sup></p>
+    </div>
+    <aside class="reference-demo-margin quiet-demo">
+      <p><span class="reference-demo-number">6</span> G. W. F. Hegel, <em>The Philosophy of History</em> (1840), p. 535.</p>
+      <p><span class="reference-demo-number">8</span> Engels to Marx, 14 July 1858. <em>MECW</em>, vol. 40, pp. 325–327.</p>
+    </aside>
+  </div>
+</section>
+
+<section class="reference-demo">
+  <h2><span>02</span> One active note</h2>
+  <p class="reference-demo-description">Select a citation number. The margin keeps only that reference in view.</p>
+  <div class="reference-demo-sheet" data-active-demo>
+    <div class="reference-demo-prose">
+      <p>Engels embodied this zeitgeist, this “enthusiasm of reason” wholly.<sup><button type="button" class="reference-demo-citation" data-note="6" aria-pressed="true">6</button></sup></p>
+      <p>He kept company with a number of scientists and read extensively on advances in the natural sciences and mathematics throughout his life.<sup><button type="button" class="reference-demo-citation" data-note="8" aria-pressed="false">8</button></sup></p>
+    </div>
+    <aside class="reference-demo-margin active-demo" aria-live="polite">
+      <p data-note-text="6"><span class="reference-demo-number">6</span> G. W. F. Hegel, <em>The Philosophy of History</em> (1840), p. 535.</p>
+      <p data-note-text="8" hidden><span class="reference-demo-number">8</span> Engels to Marx, 14 July 1858. <em>MECW</em>, vol. 40, pp. 325–327.</p>
+    </aside>
+  </div>
+</section>
+
+<section class="reference-demo">
+  <h2><span>03</span> Brief citation, expandable detail</h2>
+  <p class="reference-demo-description">Short source labels in the margin. Open one to reveal its full reference.</p>
+  <div class="reference-demo-sheet">
+    <div class="reference-demo-prose">
+      <p>Engels embodied this zeitgeist, this “enthusiasm of reason” wholly.<sup>6</sup></p>
+      <p>He kept company with a number of scientists and read extensively on advances in the natural sciences and mathematics throughout his life.<sup>8</sup></p>
+    </div>
+    <aside class="reference-demo-margin brief-demo">
+      <details><summary><span class="reference-demo-number">6</span> Hegel, <em>Philosophy of History</em></summary><p>G. W. F. Hegel, <em>The Philosophy of History</em> (1840), p. 535. Cited by Engels in <em>Socialism: Utopian and Scientific</em>.</p></details>
+      <details><summary><span class="reference-demo-number">8</span> Engels to Marx, 1858</summary><p>Engels to Marx, 14 July 1858. <em>Marx–Engels Collected Works</em>, vol. 40, pp. 325–327.</p></details>
+    </aside>
+  </div>
+</section>
+<script src="{{ '/assets/js/reference-demos.js' | relative_url }}" defer></script>

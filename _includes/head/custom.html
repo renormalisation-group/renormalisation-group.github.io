@@ -1,0 +1,721 @@
+<!-- start custom head snippets -->
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true,
+    processEnvironments: true,
+    tags: 'ams',
+
+    packages: {
+      '[+]': ['youngtab']
+    }
+  },
+
+  output: {
+    font: 'mathjax-newcm'
+  },
+
+  startup: {
+    ready() {
+
+      const Configuration =
+        MathJax._.input.tex.Configuration.Configuration;
+
+      const CommandMap =
+        MathJax._.input.tex.TokenMap.CommandMap;
+
+      const TexParser =
+        MathJax._.input.tex.TexParser.default;
+
+
+      /* ==========================================================
+       * Young tableaux / youngtab
+       * ========================================================== */
+
+      let lineThickness = '1pt';
+
+
+      /* ----------------------------------------------------------
+       * Read the contents of (...) in \yng(...) or \young(...)
+       * ---------------------------------------------------------- */
+
+      function getParenthesizedArgument(parser, name) {
+
+        while (
+          parser.i < parser.string.length &&
+          /\s/.test(parser.string.charAt(parser.i))
+        ) {
+          parser.i++;
+        }
+
+        if (parser.string.charAt(parser.i) !== '(') {
+          parser.Error(
+            'MissingOpen',
+            'Missing ( after %1',
+            name
+          );
+        }
+
+        parser.i++;
+
+        const start = parser.i;
+        let depth = 1;
+        let braces = 0;
+
+        while (parser.i < parser.string.length) {
+
+          const c = parser.string.charAt(parser.i);
+
+          if (c === '{') {
+            braces++;
+          }
+
+          else if (c === '}') {
+            braces--;
+          }
+
+          else if (braces === 0) {
+
+            if (c === '(') {
+              depth++;
+            }
+
+            else if (c === ')') {
+              depth--;
+
+              if (depth === 0) {
+
+                const result =
+                  parser.string.slice(
+                    start,
+                    parser.i
+                  );
+
+                parser.i++;
+
+                return result;
+              }
+            }
+          }
+
+          parser.i++;
+        }
+
+        parser.Error(
+          'MissingClose',
+          'Missing ) for %1',
+          name
+        );
+      }
+
+
+      /* ----------------------------------------------------------
+       * Split \young(abc,de,f) into rows.
+       * ---------------------------------------------------------- */
+
+      function splitRows(text) {
+
+        const rows = [];
+        let current = '';
+        let braces = 0;
+
+        for (let i = 0; i < text.length; i++) {
+
+          const c = text.charAt(i);
+
+          if (c === '{') {
+            braces++;
+            current += c;
+          }
+
+          else if (c === '}') {
+            braces--;
+            current += c;
+          }
+
+          else if (c === ',' && braces === 0) {
+            rows.push(current);
+            current = '';
+          }
+
+          else {
+            current += c;
+          }
+        }
+
+        rows.push(current);
+
+        return rows;
+      }
+
+
+      /* ----------------------------------------------------------
+       * Split a row into cells.
+       *
+       * abc       -> a, b, c
+       * {a_i}bc   -> a_i, b, c
+       * \alpha bc -> \alpha, b, c
+       * ---------------------------------------------------------- */
+
+      function tokenizeRow(row) {
+
+        const tokens = [];
+        let i = 0;
+
+        while (i < row.length) {
+
+          /* Ignore whitespace. */
+          if (/\s/.test(row.charAt(i))) {
+            i++;
+            continue;
+          }
+
+
+          /* A braced expression is one cell. */
+          if (row.charAt(i) === '{') {
+
+            let depth = 1;
+            let j = i + 1;
+
+            while (
+              j < row.length &&
+              depth > 0
+            ) {
+
+              if (row.charAt(j) === '{') {
+                depth++;
+              }
+
+              else if (row.charAt(j) === '}') {
+                depth--;
+              }
+
+              j++;
+            }
+
+            tokens.push(
+              row.slice(i + 1, j - 1)
+            );
+
+            i = j;
+            continue;
+          }
+
+
+          /* A TeX command is one cell. */
+          if (row.charAt(i) === '\\') {
+
+            let j = i + 1;
+
+            while (
+              j < row.length &&
+              /[A-Za-z@]/.test(
+                row.charAt(j)
+              )
+            ) {
+              j++;
+            }
+
+
+            /*
+             * Include a braced argument, e.g.
+             * \mathbf{a}
+             */
+            if (row.charAt(j) === '{') {
+
+              let depth = 1;
+              let k = j + 1;
+
+              while (
+                k < row.length &&
+                depth > 0
+              ) {
+
+                if (row.charAt(k) === '{') {
+                  depth++;
+                }
+
+                else if (row.charAt(k) === '}') {
+                  depth--;
+                }
+
+                k++;
+              }
+
+              j = k;
+            }
+
+            tokens.push(
+              row.slice(i, j)
+            );
+
+            i = j;
+            continue;
+          }
+
+
+          /* Ordinary character. */
+          tokens.push(row.charAt(i));
+          i++;
+        }
+
+        return tokens;
+      }
+
+
+      /* ==========================================================
+       * Young diagrams: \yng(...)
+       * ========================================================== */
+
+      function makeDiagramCell(
+        parser,
+        content,
+        borders
+      ) {
+
+        const border =
+          lineThickness +
+          ' solid currentColor';
+
+        let style =
+          'width:1.55em;' +
+          'height:1.55em;' +
+          'box-sizing:border-box;' +
+          'display:inline-flex;' +
+          'align-items:center;' +
+          'justify-content:center;';
+
+
+        if (borders.top) {
+          style +=
+            'border-top:' +
+            border +
+            ';';
+        }
+
+        if (borders.right) {
+          style +=
+            'border-right:' +
+            border +
+            ';';
+        }
+
+        if (borders.bottom) {
+          style +=
+            'border-bottom:' +
+            border +
+            ';';
+        }
+
+        if (borders.left) {
+          style +=
+            'border-left:' +
+            border +
+            ';';
+        }
+
+
+        const cellMath =
+          new TexParser(
+            content,
+            parser.stack.env,
+            parser.configuration
+          ).mml();
+
+
+        return parser.create(
+          'node',
+          'mrow',
+          [cellMath],
+          {
+            class: 'youngtab-cell',
+            style: style
+          }
+        );
+      }
+
+
+      function makeDiagramRow(
+        parser,
+        entries,
+        rowIndex
+      ) {
+
+        const cells =
+          entries.map(
+            function (entry, colIndex) {
+
+              return makeDiagramCell(
+                parser,
+                entry,
+                {
+                  top: rowIndex === 0,
+                  right: true,
+                  bottom: true,
+                  left: colIndex === 0
+                }
+              );
+            }
+          );
+
+
+        return parser.create(
+          'node',
+          'mrow',
+          cells,
+          {
+            class: 'youngtab-row',
+            style:
+              'display:flex;' +
+              'height:1.55em;'
+          }
+        );
+      }
+
+
+      function Yng(parser, name) {
+
+        const argument =
+          getParenthesizedArgument(
+            parser,
+            name
+          );
+
+
+        const lengths =
+          argument
+            .split(',')
+            .map(
+              function (x) {
+                return parseInt(
+                  x.trim(),
+                  10
+                );
+              }
+            )
+            .filter(
+              function (x) {
+                return (
+                  Number.isFinite(x) &&
+                  x > 0
+                );
+              }
+            );
+
+
+        const rows =
+          lengths.map(
+            function (length, rowIndex) {
+
+              const entries = [];
+
+              for (
+                let i = 0;
+                i < length;
+                i++
+              ) {
+                entries.push(
+                  '\\phantom{1}'
+                );
+              }
+
+              return makeDiagramRow(
+                parser,
+                entries,
+                rowIndex
+              );
+            }
+          );
+
+
+        const tableau =
+          parser.create(
+            'node',
+            'mrow',
+            rows,
+            {
+              class:
+                'youngtab-diagram',
+              style:
+                'display:inline-block;' +
+                'vertical-align:middle;' +
+                'line-height:1;'
+            }
+          );
+
+
+        parser.Push(tableau);
+      }
+
+
+      /* ==========================================================
+       * Young tableaux: \young(...)
+       *
+       * Use actual MathML table elements:
+       *
+       *   mtable
+       *     mtr
+       *       mtd
+       *       ...
+       *
+       * This prevents MathJax's ordinary mathematical row
+       * spacing from affecting the tableau.
+       * ========================================================== */
+
+      function makeTableauCell(
+        parser,
+        content,
+        isFirstRow,
+        isFirstColumn
+      ) {
+
+        const border =
+          lineThickness +
+          ' solid currentColor';
+
+        let style =
+          'box-sizing:border-box;' +
+          'width:1.55em;' +
+          'height:1.55em;' +
+          'padding:0;' +
+          'margin:0;' +
+          'text-align:center;' +
+          'vertical-align:middle;';
+
+
+        /*
+         * Top edge only on the first row.
+         */
+        if (isFirstRow) {
+          style +=
+            'border-top:' +
+            border +
+            ';';
+        }
+
+
+        /*
+         * Left edge only on the first column.
+         */
+        if (isFirstColumn) {
+          style +=
+            'border-left:' +
+            border +
+            ';';
+        }
+
+
+        /*
+         * Every cell supplies its right and bottom edges.
+         * Hence every shared boundary is drawn exactly once.
+         */
+        style +=
+          'border-right:' +
+          border +
+          ';';
+
+        style +=
+          'border-bottom:' +
+          border +
+          ';';
+
+
+        const cellMath =
+          new TexParser(
+            content,
+            parser.stack.env,
+            parser.configuration
+          ).mml();
+
+
+        return parser.create(
+          'node',
+          'mtd',
+          [cellMath],
+          {
+            class:
+              'youngtab-cell',
+            style:
+              style
+          }
+        );
+      }
+
+
+      function Young(parser, name) {
+
+        const argument =
+          getParenthesizedArgument(
+            parser,
+            name
+          );
+
+
+        const tokenRows =
+          splitRows(argument)
+            .map(
+              function (row) {
+                return tokenizeRow(row);
+              }
+            );
+
+
+        const tableRows =
+          tokenRows.map(
+            function (entries, rowIndex) {
+
+              const cells =
+                entries.map(
+                  function (entry, colIndex) {
+
+                    return makeTableauCell(
+                      parser,
+                      entry,
+                      rowIndex === 0,
+                      colIndex === 0
+                    );
+                  }
+                );
+
+
+              return parser.create(
+                'node',
+                'mtr',
+                cells,
+                {
+                  class:
+                    'youngtab-row'
+                }
+              );
+            }
+          );
+
+
+        const tableau =
+          parser.create(
+            'node',
+            'mtable',
+            tableRows,
+            {
+              class:
+                'youngtab-tableau',
+
+              columnalign:
+                'center',
+
+              rowalign:
+                'center',
+
+              columnspacing:
+                '0em',
+
+              rowspacing:
+                '0em',
+
+              frame:
+                'none',
+
+              style:
+                'display:inline-table;' +
+                'border-spacing:0;' +
+                'vertical-align:middle;' +
+                'margin:0;' +
+                'padding:0;'
+            }
+          );
+
+
+        parser.Push(tableau);
+      }
+
+
+      /* ==========================================================
+       * \Ylinethick{...}
+       * ========================================================== */
+
+      function Ylinethick(parser, name) {
+
+        lineThickness =
+          parser.GetArgument(name).trim();
+      }
+
+
+      /* ==========================================================
+       * Register commands
+       * ========================================================== */
+
+      new CommandMap(
+        'youngtab',
+        {
+          yng: 'Yng',
+          young: 'Young',
+          Ylinethick: 'Ylinethick'
+        },
+        {
+          Yng: Yng,
+          Young: Young,
+          Ylinethick: Ylinethick
+        }
+      );
+
+
+      Configuration.create(
+        'youngtab',
+        {
+          handler: {
+            macro: ['youngtab']
+          }
+        }
+      );
+
+
+      /* Continue normal MathJax startup. */
+      MathJax.startup.defaultReady();
+    }
+  }
+};
+</script>
+
+<script defer
+  src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js">
+</script>
+
+{% if site.goatcounter_code %}
+<script data-goatcounter="https://{{ site.goatcounter_code | escape }}.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+{% endif %}
+
+<!-- Classic fallback -->
+<link rel="icon"
+      href="{{ '/favicon.ico' | relative_url }}"
+      sizes="any">
+
+<!-- Light mode -->
+<link rel="icon"
+      href="{{ '/assets/images/favicon-light.svg' | relative_url }}"
+      type="image/svg+xml"
+      media="(prefers-color-scheme: light)">
+
+<!-- Dark mode -->
+<link rel="icon"
+      href="{{ '/assets/images/favicon-dark.svg' | relative_url }}"
+      type="image/svg+xml"
+      media="(prefers-color-scheme: dark)">
+
+<!-- PNG fallback -->
+<link rel="icon"
+      href="{{ '/assets/images/favicon-96x96.png' | relative_url }}"
+      type="image/png"
+      sizes="32x32">
+
+<!-- iPhone/iPad home screen -->
+<link rel="apple-touch-icon"
+      href="{{ '/assets/images/apple-touch-icon.png' | relative_url }}"
+      sizes="180x180">
+
+
+<!-- end custom head snippets -->

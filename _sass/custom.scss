@@ -1,0 +1,670 @@
+/* Change font size, justify all paragraphs, make blockquotes normal. */
+
+html {
+  font-size: 16px;
+}
+
+.page__content p {
+  text-align: justify;
+  hyphens: auto;
+}
+
+blockquote {
+  font-style: normal;
+}
+
+/* Centers TOC in right third of screen. */
+
+@media (min-width: 1024px) {
+  .toc {
+    transform: translateX(20%);
+  }
+}
+
+/* ==========================================================================
+   Footnotes
+   ========================================================================== */
+
+/*
+ * ------------------------------------------------------------
+ * Footnote references
+ * ------------------------------------------------------------
+ */
+
+.page__content a.footnote {
+  font-size: 0.72em;
+  line-height: 0;
+  vertical-align: super;
+  text-decoration: none;
+
+  margin-left: 0.04em;
+  margin-right: 0.04em;
+}
+
+
+/*
+ * ------------------------------------------------------------
+ * Desktop floating footnote
+ * ------------------------------------------------------------
+ */
+
+/* ==========================================================================
+   Desktop floating footnotes
+   ========================================================================== */
+
+.footnote-sidebar {
+  position: fixed;
+
+  left: calc(50% + 390px);
+
+  width: 280px;
+  max-width: 20vw;
+
+  top: 0;
+  right: auto;
+  bottom: 0;
+
+  z-index: 100;
+
+  pointer-events: none;
+
+  opacity: 0;
+  visibility: hidden;
+
+  transition:
+    opacity 0.6s ease,
+    visibility 0.6s ease;
+
+  font-size: 0.78em;
+  line-height: 1.5;
+}
+
+.footnote-sidebar.is-visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+
+/*
+ * Each individual footnote is positioned independently
+ * by JavaScript.
+ */
+
+.footnote-sidebar__item {
+  position: absolute;
+
+  left: 0;
+  right: 0;
+
+  pointer-events: auto;
+
+  opacity: 0;
+
+  transition: opacity 0.6s ease;
+}
+
+.footnote-sidebar__item.is-visible {
+  opacity: 1;
+}
+
+
+/*
+ * The actual footnote content.
+ */
+
+.footnote-content {
+  position: relative;
+
+  display: flex;
+  align-items: flex-start;
+
+  padding-left: 1.5em;
+
+  border-left: 1px solid $border-color;
+}
+
+.footnote-number {
+  position: absolute;
+
+  left: -1.4em;
+
+  width: 1.2em;
+
+  text-align: right;
+
+  padding: 0;
+
+  background: $background-color;
+
+  font-size: 0.85em;
+  font-weight: 600;
+}
+
+.footnote-text {
+  min-width: 0;
+ text-align: justify;
+}
+
+.footnote-text p {
+  margin-top: 0;
+  margin-bottom: 0.5em;
+}
+
+.footnote-text p:last-child {
+  margin-bottom: 0;
+}
+
+/* ==========================================================================
+   Mobile inline footnotes
+   ========================================================================== */
+
+.mobile-footnote {
+  margin: 0.8em 0 1.2em;
+
+  padding: 0.9em 1em;
+
+  border-left: 2px solid $border-color;
+
+  font-size: 0.85em;
+  line-height: 1.5;
+}
+
+/*
+ * Don't add another vertical border to the content inside the
+ * mobile footnote. The border belongs to the entire footnote.
+ */
+.mobile-footnote .footnote-content {
+  border-left: 0;
+  padding-left: 1.5em;
+}
+
+
+/*
+ * Justify the actual footnote text.
+ */
+.mobile-footnote .footnote-text {
+  text-align: justify;
+}
+
+
+@media (max-width: 1199px) {
+  .footnote-sidebar {
+    display: none;
+  }
+
+  .page__content .footnotes {
+    display: block;
+  }
+
+  .mobile-footnote .footnote-number {
+    display: none;
+  }
+
+  .mobile-footnote .footnote-content {
+    padding-left: 0;
+  }
+}
+
+/*
+ * ------------------------------------------------------------
+ * Desktop / mobile breakpoint
+ * ------------------------------------------------------------
+ */
+
+@media (min-width: 1200px) {
+
+  /*
+   * The normal endnotes are hidden because the sidebar is now
+   * the primary presentation.
+   */
+  .page__content .footnotes {
+    display: none;
+  }
+
+  .mobile-footnote {
+    display: none;
+  }
+}
+
+
+@media (max-width: 1199px) {
+
+  /*
+   * The desktop sidebar isn't used on smaller screens.
+   */
+  .footnote-sidebar {
+    display: none;
+  }
+
+  /*
+   * The normal endnotes remain available at the bottom as a
+   * fallback, but JavaScript creates inline notes when the
+   * reader taps a reference.
+   */
+  .page__content .footnotes {
+    display: block;
+  }
+}
+
+
+/*
+ * ------------------------------------------------------------
+ * Small phones
+ * ------------------------------------------------------------
+ */
+
+@media (max-width: 600px) {
+
+  .mobile-footnote {
+    font-size: 0.85em;
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  .page__content a.footnote {
+    font-size: 0.7em;
+  }
+}
+
+/* MOVIE PAGES */
+
+.movie-page__meta {
+  margin-top: 0;
+}
+
+.movie-page__meta-item {
+  display: block;
+  margin-bottom: 0.5em;
+  line-height: 1.5;
+}
+
+.movie-page__meta-item:last-child {
+  margin-bottom: 0;
+}
+
+.movie-page__meta-item strong {
+  font-weight: 700;
+}
+
+.movie-poster {
+  float: right;
+  width: 280px;
+  margin: 0 0 1.5em 2em;
+}
+
+.movie-poster img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+@media (max-width: 600px) {
+  .movie-poster {
+    float: none;
+    width: 60%;
+    margin: 0 auto 1.5em;
+  }
+
+  .movie-poster img {
+    display: block;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+/* MOVIE GRID */
+
+.movie-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2rem 1.5rem;
+  margin-top: 2rem;
+}
+
+.movie-card {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+}
+
+.movie-card img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  object-fit: cover;
+  border-radius: 3px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.movie-card:hover img {
+  transform: translateY(-3px);
+  box-shadow: 0 5px 14px rgba(0, 0, 0, 0.2);
+}
+
+.movie-title {
+  margin-top: 0.7rem;
+  font-size: 0.95rem;
+  line-height: 1.3;
+  font-weight: 600;
+}
+
+.movie-year {
+  margin-top: 0.2rem;
+  font-size: 0.8rem;
+  opacity: 0.65;
+}
+
+/* Three columns on medium screens */
+@media (max-width: 900px) {
+  .movie-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Two columns on phones */
+@media (max-width: 600px) {
+  .movie-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem 1rem;
+  }
+}
+
+.movie-director {
+  margin-top: 0.2rem;
+  font-size: 0.85rem;
+  font-style: italic;
+  opacity: 0.75;
+}
+
+/* Young diagrams and tableaux */
+
+mjx-mrow.youngtab-diagram {
+  display: inline-block !important;
+  vertical-align: middle;
+  line-height: 1;
+}
+
+mjx-mrow.youngtab-row {
+  display: flex !important;
+  height: 1.55em;
+}
+
+mjx-mrow.youngtab-cell {
+  display: inline-flex !important;
+  box-sizing: border-box;
+  width: 1.55em;
+  height: 1.55em;
+  align-items: center;
+  justify-content: center;
+}
+
+mjx-mtable.youngtab-tableau {
+  display: inline-table !important;
+  vertical-align: middle;
+  border-spacing: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+mjx-mtable.youngtab-tableau > mjx-mtr {
+  height: 1.55em;
+}
+
+mjx-mtable.youngtab-tableau > mjx-mtr > mjx-mtd.youngtab-cell {
+  box-sizing: border-box;
+  width: 1.55em;
+  height: 1.55em;
+  padding: 0 !important;
+  margin: 0 !important;
+  text-align: center;
+  vertical-align: middle;
+}
+
+/* BOOK GRID */
+
+.book-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2rem 1.5rem;
+  margin-top: 2rem;
+}
+
+.book-card {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+}
+
+.book-card img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  object-fit: cover;
+  border-radius: 3px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.book-card:hover img {
+  transform: translateY(-3px);
+  box-shadow: 0 5px 14px rgba(0, 0, 0, 0.2);
+}
+
+.book-title {
+  margin-top: 0.7rem;
+  font-size: 0.95rem;
+  line-height: 1.3;
+  font-weight: 600;
+}
+
+.book-author {
+  margin-top: 0.2rem;
+  font-size: 0.85rem;
+  font-style: italic;
+  opacity: 0.75;
+}
+
+/* Three columns on medium screens */
+@media (max-width: 900px) {
+  .book-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Two columns on phones */
+@media (max-width: 600px) {
+  .book-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem 1rem;
+  }
+}
+
+/* BOOK POST PAGES */
+
+.book-cover {
+  float: right;
+  width: 280px;
+  margin: 0 0 1.5em 2em;
+}
+
+.book-cover img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+@media (max-width: 600px) {
+  .book-cover {
+    float: none;
+    width: 60%;
+    margin: 0 auto 1.5em;
+  }
+
+  .book-cover img {
+    display: block;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+/* =========================================================
+   Notes archive — month tabs
+   ========================================================= */
+
+.notes-month-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5em;
+  margin: 1.5em 0 2em;
+}
+
+.notes-month-tab {
+  appearance: none;
+  -webkit-appearance: none;
+  border: 1px solid $link-color;
+  border-radius: 0.25em;
+  background: transparent;
+  color: $link-color;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.85em;
+  line-height: 1.2;
+  padding: 0.55em 0.8em;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.notes-month-tab:hover,
+.notes-month-tab:focus {
+  background-color: $link-color;
+  color: #fff;
+}
+
+.notes-month-tab[aria-selected="true"] {
+  background-color: $link-color;
+  color: #fff;
+}
+
+.notes-month-count {
+  opacity: 0.75;
+  margin-left: 0.2em;
+}
+
+.notes-month-tab[aria-selected="true"] .notes-month-count {
+  opacity: 1;
+}
+
+
+/* =========================================================
+   Notes archive — month panels
+   ========================================================= */
+
+.notes-month-panels {
+  margin-top: 1em;
+}
+
+.notes-month-panel[hidden] {
+  display: none;
+}
+
+
+/* =========================================================
+   Notes archive — responsive cards
+   ========================================================= */
+
+.notes-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.5em;
+  margin-top: 1.5em;
+}
+
+.notes-card {
+  border: 1px solid #d8d8d8;
+  border-radius: 0.35em;
+  padding: 1.25em 1.35em;
+  min-width: 0;
+  transition:
+    box-shadow 0.15s ease,
+    transform 0.15s ease;
+}
+
+.notes-card:hover {
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
+}
+
+.notes-card__title {
+  margin: 0;
+  font-size: 1em;
+  line-height: 1.35;
+}
+
+.notes-card__title a {
+  text-decoration: none;
+}
+
+.notes-card__excerpt {
+  margin-top: 0.65em;
+  font-size: 0.85em;
+  line-height: 1.55;
+}
+
+.notes-card__excerpt p {
+  margin: 0;
+}
+
+
+/* =========================================================
+   Medium screens
+   ========================================================= */
+
+@media screen and (max-width: 900px) {
+
+  .notes-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+}
+
+
+/* =========================================================
+   Small screens
+   ========================================================= */
+
+@media screen and (max-width: 600px) {
+
+  .notes-month-tabs {
+    gap: 0.4em;
+  }
+
+  .notes-month-tab {
+    font-size: 0.8em;
+  }
+
+  .notes-grid {
+    grid-template-columns: 1fr;
+    gap: 1em;
+  }
+
+  .notes-card {
+    padding: 1.1em 1.2em;
+  }
+
+}
+
+/* Notes page — collection descriptions */
+
+.page__content p.notes-collection-description {
+  font-size: 0.85em !important;
+  line-height: 1.55;
+}
+/* Collective additions; inherited reading styles remain above. */
+.contributor-byline { font-size: .78rem; color: $muted-text-color; text-align: left !important; }
+.collective-intro { font-size: 1.2rem; max-width: 38em; }
+.notes-card { border-color: $border-color; }
+a:focus-visible, button:focus-visible { outline: 2px solid $link-color; outline-offset: 4px; }
