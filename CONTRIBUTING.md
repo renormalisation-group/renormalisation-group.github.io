@@ -57,41 +57,20 @@ The author directory and personal archive update automatically. Optional rotatin
 biographies use `rotating_bio: true` and a `bios` list in that author's entry.
 `_data/author_bios.yml` remains an optional shared fallback and is empty initially.
 
-## 4. Write a note on a branch
+## 4. Write a flow on a branch
 
-In GitHub Desktop, fetch/pull `main`, then create `notes/your-topic`. Add a file
-named `_posts/YYYY-MM-DD-your-topic.md`:
+Follow the [README collaboration workflow](README.md#collaboration-workflow).
+Copy [templates/flow.md](templates/flow.md) to
+`_posts/YYYY-MM-DD-your-topic.md`, then replace its sample content and metadata.
+See [Writing a flow in Markdown](README.md#writing-a-flow-in-markdown) for
+footnotes, short reference labels, coauthorship, and draft previews.
 
-```markdown
----
-title: "Your title"
-date: 2026-10-18
-contributors: [writer-id]
-categories: [Physics]
-excerpt: "A short description."
----
+Contributor IDs must match `_data/authors.yml`; their order determines byline
+order. Categories are case-sensitive subject areas. Use `tags` for the authors
+cited in the flow. Keep each flow's permalink unique.
 
-Your text. Inline mathematics: $E = mc^2$.
-
-A footnote reference.[^example]
-
-[^example]: The footnote text.
-```
-
-For coauthorship use `contributors: [writer-id, another-id]`; order determines
-byline order and the first author's sidebar. Every ID needs a registry entry and
-profile page. `author` is reserved for a book's writer, not the site's contributor.
-Books use `categories: [Books]`, `cover`, and `author`. Movies use
-`categories: [Movies]`, `poster`, `director`, and an optional `cast` list.
-Use `relative_url` for local image paths in Markdown/HTML when hosting below a
-project path; existing book/movie `cover` and `poster` fields should use full URLs
-or Liquid relative_url expressions. Categories are case-sensitive.
-
-Commit, push the branch, and open a pull request into `main`. Ask an editor to
-review. Amend the same branch to address feedback; updates appear in the PR.
-Use `_drafts/topic.md` for unpublished drafts and preview with `--drafts`.
-Future-dated posts do not publish until a build occurs on/after their date; there
-is no scheduled publishing job installed.
+Commit, push the branch, and open a pull request into `main`. Ask the other editor
+to review. Further commits on the same branch update the pull request.
 
 ## 5. Review and publish
 
@@ -102,7 +81,7 @@ PR. Actions deploys the result to Pages. If publication fails, inspect Actions â
 Other writers pull the updated `main` before starting their next branch.
 
 GitHub's browser editor also works: choose/create a branch, edit Markdown, commit
-to that branch, then open a PR. Nobody needs to edit HTML for ordinary notes.
+to that branch, then open a PR. Nobody needs to edit HTML for ordinary flows.
 
 ## Official references
 
