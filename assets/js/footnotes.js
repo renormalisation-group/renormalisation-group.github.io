@@ -77,6 +77,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const label = document.createElement("span");
     label.className = "footnote-label";
     label.textContent = footnote.dataset.noteLabel ||
+      footnote.querySelector("[data-note-label]")?.dataset.noteLabel ||
       (footnote.querySelector("em")?.textContent || content.textContent.trim().split(/[.!?]/)[0]).slice(0, 72);
     summary.appendChild(number);
     summary.appendChild(label);

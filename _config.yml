@@ -176,6 +176,7 @@ exclude:
   - CONTRIBUTING.md
   - CUSTOMIZATIONS.md
   - scripts
+  - templates
   - /docs # ignore Minimal Mistakes /docs
   - /test # ignore Minimal Mistakes /test
 keep_files:

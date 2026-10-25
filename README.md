@@ -27,6 +27,39 @@ The Actions workflow builds pull requests and deploys merges to `main` once Page
 is configured. The repository is maintained at
 https://github.com/renormalisation-group/renormalisation-group.github.io.
 
+## Writing a flow in Markdown
+
+Copy [templates/flow.md](templates/flow.md) into `_posts/` and rename it
+`YYYY-MM-DD-your-flow-slug.md`. The template is excluded from the built website.
+Replace the title, date, permalink, category, cited-author tags, and sample text.
+Use `contributors: [madhu]`, `[adwait]`, or `[madhu, adwait]` for a joint flow.
+Each author ID must exist in `_data/authors.yml`. Keep the permalink unique.
+
+Use ordinary Markdown for headings, emphasis, links, quotations, and footnotes.
+See [An Enthusiasm of Reason](_posts/2026-10-24-an-enthusiasm-of-reason.md)
+for a complete example. No HTML is needed.
+
+For floating references, write `[^source]` at the citation and define it at the
+bottom of the file. The optional indented attribute line sets the short label
+shown when the reference is closed:
+
+```markdown
+A sentence with a citation.[^source]
+
+[^source]: Author, *Book title* (Publisher, year), pp. 42–43.
+    {: data-note-label="Author, Book title"}
+```
+
+Keep page numbers and full publication details in the definition, not the short
+label. References start closed; readers expand them to see the details. Indent
+the attribute line by four spaces. If omitted, the site derives a label from the
+reference text. Repeated citations with different page numbers should use
+separate footnote IDs and can share the same short label.
+
+Preview with `bundle exec jekyll serve --baseurl ""`. For unpublished work,
+put the file in `_drafts/` and add `--drafts` to the preview command. Future-dated
+flows are omitted until a build on or after their publication date.
+
 ## Collaboration workflow
 
 Madhusudhan and Adwait should use one branch per flow or change. Keep `main` as
