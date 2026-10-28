@@ -1,14 +1,5 @@
 # The Renormalisation Group
 
-A multi-author Jekyll site based on the customized Field Notes source at
-https://github.com/madhusudhanraman/madhusudhanraman.github.io.
-
-All inherited posts, personal pages, profile text and content images have been removed.
-The theme, mathematical rendering, footnotes, archives and media layouts remain.
-The new skin uses muted teal accents on ivory.
-
-Start with [CONTRIBUTING.md](CONTRIBUTING.md) for GitHub setup and author instructions.
-See [CUSTOMIZATIONS.md](CUSTOMIZATIONS.md) for the retained features.
 
 ## Local preview
 
@@ -23,9 +14,18 @@ bundle exec jekyll serve --baseurl ""
 Open http://localhost:4000. Restart Jekyll after changing `_config.yml`.
 The production address is https://renormalisation-group.github.io/.
 
-The Actions workflow builds pull requests and deploys merges to `main` once Pages
-is configured. The repository is maintained at
-https://github.com/renormalisation-group/renormalisation-group.github.io.
+## Automatic publishing
+
+Changes merged into `main` are published automatically to
+https://renormalisation-group.github.io/ by the **Site** GitHub Actions workflow.
+After a merge, GitHub builds the site and deploys it if the build succeeds.
+No manual upload or separate publishing step is needed.
+
+Changes on other branches and open pull requests do not update the live website.
+Pull requests run the build check so changes can be reviewed before publication.
+Check the repository's **Actions → Site** page for progress or errors. If a build
+or deployment fails, the previous successful version stays live.
+
 
 ## Writing a flow in Markdown
 
@@ -80,7 +80,8 @@ less likely and easier to resolve.
 4. **Open a pull request into `main`.** Describe what changed and request review
    from the other person. GitHub automatically checks that the website builds.
 5. **Review and merge.** Once the build passes and the changes are agreed,
-   merge the pull request on GitHub and delete its branch.
+   merge the pull request on GitHub and delete its branch. The merge automatically
+   triggers publishing to the live website.
 6. **Sync before the next task.** Return to `main` in GitHub Desktop, fetch and
    pull the merged changes, then create the next task branch. Both laptops need
    to pull updates independently.
@@ -99,6 +100,5 @@ less likely and easier to resolve.
 - If a conflict appears, compare both versions and preserve the intended changes.
   Do not blindly choose “mine” or “theirs”; agree on the combined result.
 
-The workflow's **build** check validates pull requests. Publishing is separate:
-the **deploy** job requires GitHub Pages to be enabled and a plan that supports
-Pages for this private organisation repository.
+The workflow's **build** check validates pull requests. After changes are merged
+into `main`, the **deploy** job publishes the updated website automatically.
